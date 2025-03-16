@@ -26,6 +26,9 @@ npm i
 node main
 ```
 - Input Your Refferal Code Not A link
+```bash
+Example Reff Code: X7B2M5
+```
 - Input How Many Reff Do You Want
 - DONE
 ## NOTE
