@@ -30,12 +30,12 @@ function generateRandomPassword() {
     return Math.random().toString(36).slice(-length);
 }
 
-// Convert string ke md5
+// CV string ke md5
 function convertToMD5(text) {
     return crypto.createHash("md5").update(text).digest("hex");
 }
 
-// Uji proxy
+// Untuk coba connect proxy
 async function testProxy(proxyUrl) {
     try {
         if (!proxyUrl) {
@@ -56,7 +56,7 @@ async function testProxy(proxyUrl) {
     return null;
 }
 
-// Eksekusi referral user
+// Eksekusi referral
 async function registerUser(agent, inviteCode) {
     const email = generateRandomEmail();
     const password = generateRandomPassword();
@@ -71,7 +71,7 @@ async function registerUser(agent, inviteCode) {
     try {
         const axiosConfig = {
             timeout: 10000,
-            ...(agent && { httpsAgent: agent }) // Gunakan agent jika tersedia
+            ...(agent && { httpsAgent: agent })
         };
 
         const response = await axios.post(API_URL, payload, axiosConfig);
