@@ -77,7 +77,7 @@ async function registerUser(agent, inviteCode) {
         const response = await axios.post(API_URL, payload, axiosConfig);
 
         if (response.status === 200) {
-            console.log(chalk.green(`[SUCCESS] Berhasil daftar: ${email} | Password: ${password}`));
+            console.log(chalk.green(`[SUCCESS] Berhasil Mendaftarkan Refferal`));
             return true;
         } else {
             console.log(chalk.red(`[FAILED] Gagal daftar: ${email} | Status: ${response.status} | Respon: ${response.data}`));
