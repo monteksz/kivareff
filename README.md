@@ -7,8 +7,24 @@ Auto Refferal Kiva Network Using Proxy
 4. Go to [Kiva](https://app.kivanet.com) & Login
 5. Click K Logo to start mining
 6. Click notification & Complete task to increase mining reward
-## How to Install
+## How to Install For Windows
 - Download [NodeJs](https://nodejs.org/en/download)
+## How to Install For Linux
+- Update Your Sistem
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+- Install NodeJs
+```bash
+curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
+sudo apt install -y nodejs
+```
+- Cek Version NodeJs And NPM
+```bash
+node -v
+npm -v
+```
+## How to Run the Bot
 - Git Clone
 ```bash
 git clone https://github.com/monteksz/kivareff
