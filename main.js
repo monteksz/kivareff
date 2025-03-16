@@ -8,36 +8,41 @@ const { HttpsProxyAgent } = require("https-proxy-agent");
 // API
 const API_URL = "https://app.kivanet.com/api/user/register";
 
-// Buat Baca Proxy Dari File
+// Baca proxy dari file
 function loadProxies(filePath) {
     if (!fs.existsSync(filePath)) {
         console.log(chalk.red("File proxy.txt tidak ditemukan!"));
-        process.exit(1);
+        return [];
     }
 
     return fs.readFileSync(filePath, "utf8").split("\n").map(line => line.trim()).filter(Boolean);
 }
 
-// Untuk Email Acak
+// Untuk email acak
 function generateRandomEmail() {
     const username = Math.random().toString(36).substring(2, 12);
     return `${username}@gmail.com`;
 }
 
-// Fungsi untuk membuat password acak
+// Buat password acak
 function generateRandomPassword() {
     const length = Math.floor(Math.random() * 2) + 7;
     return Math.random().toString(36).slice(-length);
 }
 
-// CV dari string ke md5
+// Convert string ke md5
 function convertToMD5(text) {
     return crypto.createHash("md5").update(text).digest("hex");
 }
 
-// Untuk mencoba proxy
+// Uji proxy
 async function testProxy(proxyUrl) {
     try {
+        if (!proxyUrl) {
+            console.log(chalk.blue("[INFO] Tidak ada proxy tersedia. Menggunakan IP lokal."));
+            return null;
+        }
+
         const agent = new HttpsProxyAgent(proxyUrl);
         const response = await axios.get("https://httpbin.org/ip", { httpsAgent: agent, timeout: 5000 });
 
@@ -51,7 +56,7 @@ async function testProxy(proxyUrl) {
     return null;
 }
 
-// Ekse Reff User
+// Eksekusi referral user
 async function registerUser(agent, inviteCode) {
     const email = generateRandomEmail();
     const password = generateRandomPassword();
@@ -64,7 +69,12 @@ async function registerUser(agent, inviteCode) {
     };
 
     try {
-        const response = await axios.post(API_URL, payload, { httpsAgent: agent, timeout: 10000 });
+        const axiosConfig = {
+            timeout: 10000,
+            ...(agent && { httpsAgent: agent }) // Gunakan agent jika tersedia
+        };
+
+        const response = await axios.post(API_URL, payload, axiosConfig);
 
         if (response.status === 200) {
             console.log(chalk.green(`[SUCCESS] Berhasil daftar: ${email} | Password: ${password}`));
@@ -91,11 +101,6 @@ async function countdownTimer(seconds) {
 async function main() {
     const proxyList = loadProxies("proxy.txt");
 
-    if (proxyList.length === 0) {
-        console.log(chalk.red("Proxy list kosong! Harap isi proxy.txt"));
-        return;
-    }
-
     const inviteCode = readline.question(chalk.yellow("Masukkan Kode Reff: "));
     const jumlahReff = parseInt(readline.question(chalk.yellow("Mau Berapa Reff: ")), 10);
 
@@ -111,8 +116,7 @@ async function main() {
         }
 
         if (!agent) {
-            console.log(chalk.red("[ERROR] Tidak ada proxy yang bisa digunakan."));
-            break;
+            console.log(chalk.blue("[INFO] Tidak ada proxy yang bisa digunakan. Menggunakan IP lokal."));
         }
 
         const success = await registerUser(agent, inviteCode);
